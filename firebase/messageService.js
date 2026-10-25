@@ -46,6 +46,7 @@ export async function loadMessagesOnce() {
 // PRODUCT QUESTION: How much faster should a collaborative prototype feel?
 // DO: Subscribe to an ordered query, map document IDs, update the list, and
 //     surface listener errors. The screen will own the returned cleanup.
+//     Let a message FlatList own vertical scrolling; don't nest it in a ScrollView.
 // CODE TO COMPLETE:
 // ```js
 // export function subscribeToMessages(onMessages, onError) {

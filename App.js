@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
@@ -7,7 +7,7 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
         <StatusBar barStyle="dark-content" />
-        <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.content}>
           <Text style={styles.eyebrow}>A SMALL FIREBASE CODE TOUR</Text>
           <Text style={styles.heading}>Firebase tour</Text>
           <Text style={styles.copy}>A shared message board. As you work through the parts below, this static screen will become a realtime app.</Text>
@@ -27,7 +27,7 @@ export default function App() {
             <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Send</Text></Pressable>
           </View>
           <Text style={styles.footer}>Authentication decides who can join. Firebase Security Rules decide what signed-in people may do.</Text>
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -68,7 +68,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: '#f4f6fb', flex: 1 },
-  content: { gap: 16, padding: 22, paddingTop: 34 },
+  content: { flex: 1, gap: 16, padding: 22, paddingTop: 34 },
   eyebrow: { color: '#4358d5', fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
   heading: { color: '#19233b', fontSize: 32, fontWeight: '800' },
   copy: { color: '#5f6b83', fontSize: 15, lineHeight: 22 },

@@ -1,33 +1,35 @@
 import React from 'react';
 import { Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.eyebrow}>A SMALL FIREBASE CODE TOUR</Text>
-        <Text style={styles.heading}>Firebase tour</Text>
-        <Text style={styles.copy}>A shared message board. As you work through the parts below, this static screen will become a realtime app.</Text>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar barStyle="dark-content" />
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.eyebrow}>A SMALL FIREBASE CODE TOUR</Text>
+          <Text style={styles.heading}>Firebase tour</Text>
+          <Text style={styles.copy}>A shared message board. As you work through the parts below, this static screen will become a realtime app.</Text>
 
-        <View style={styles.panel}>
-          <Text style={styles.subheading}>Join the conversation</Text>
-          <TextInput accessibilityLabel="Email" autoCapitalize="none" placeholder="Email" style={styles.input} />
-          <TextInput accessibilityLabel="Password" placeholder="Password" secureTextEntry style={styles.input} />
-          <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Create account</Text></Pressable>
-          <Pressable accessibilityRole="button" style={styles.secondary}><Text style={styles.secondaryText}>Sign in</Text></Pressable>
-        </View>
+          <View style={styles.panel}>
+            <Text style={styles.subheading}>Join the conversation</Text>
+            <TextInput accessibilityLabel="Email" autoCapitalize="none" placeholder="Email" style={styles.input} />
+            <TextInput accessibilityLabel="Password" placeholder="Password" secureTextEntry style={styles.input} />
+            <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Create account</Text></Pressable>
+            <Pressable accessibilityRole="button" style={styles.secondary}><Text style={styles.secondaryText}>Sign in</Text></Pressable>
+          </View>
 
-        <View style={styles.panel}>
-          <Text style={styles.subheading}>Community messages</Text>
-          <Text style={styles.copy}>Messages will appear here after the read and realtime-listener parts.</Text>
-          <TextInput accessibilityLabel="Message" placeholder="Write a message..." style={styles.input} />
-          <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Send</Text></Pressable>
-        </View>
-        <Text style={styles.footer}>Authentication decides who can join. Firebase Security Rules decide what signed-in people may do.</Text>
-      </ScrollView>
-    </SafeAreaView>
+          <View style={styles.panel}>
+            <Text style={styles.subheading}>Community messages</Text>
+            <Text style={styles.copy}>Messages will appear here after the read and realtime-listener parts.</Text>
+            <TextInput accessibilityLabel="Message" placeholder="Write a message..." style={styles.input} />
+            <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Send</Text></Pressable>
+          </View>
+          <Text style={styles.footer}>Authentication decides who can join. Firebase Security Rules decide what signed-in people may do.</Text>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

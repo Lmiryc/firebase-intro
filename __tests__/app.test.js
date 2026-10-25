@@ -24,7 +24,7 @@ let authUnsubscribe;
 let messageUnsubscribe;
 
 function signInUser(rendered) {
-  act(() => authListener(signedInUser));
+  if (authListener) act(() => authListener(signedInUser));
   return rendered;
 }
 
@@ -49,7 +49,7 @@ beforeEach(() => {
 test('shows auth loading state before Firebase resolves, then signed-out controls', () => {
   const screen = render(<App />);
   expect(screen.getByText('Checking your sign-in…')).toBeTruthy();
-  act(() => authListener(null));
+  if (authListener) act(() => authListener(null));
   expect(screen.getByText('Welcome to the message board')).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Create account' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Sign in' })).toBeTruthy();
@@ -57,7 +57,7 @@ test('shows auth loading state before Firebase resolves, then signed-out control
 
 test('sign up, sign in, and sign out use services and auth errors are friendly', async () => {
   const screen = render(<App />);
-  act(() => authListener(null));
+  if (authListener) act(() => authListener(null));
   fireEvent.changeText(screen.getByLabelText('Email'), 'student@example.com');
   fireEvent.changeText(screen.getByLabelText('Password'), 'not-visible-password');
   expect(screen.getByLabelText('Password').props.secureTextEntry).toBe(true);

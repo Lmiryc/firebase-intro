@@ -1,143 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { observeAuthState, signIn, signOutCurrentUser, signUp } from './firebase/authService';
-import { createMessage, subscribeToMessages } from './firebase/messageService';
-import AuthPanel from './components/AuthPanel';
-import MessageComposer from './components/MessageComposer';
-import MessageList from './components/MessageList';
+import React from 'react';
+import { Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [authReady, setAuthReady] = useState(false);
-  const [authBusy, setAuthBusy] = useState(false);
-  const [authError, setAuthError] = useState('');
-  const [messages, setMessages] = useState([]);
-  const [messagesLoading, setMessagesLoading] = useState(true);
-  const [messageError, setMessageError] = useState('');
-  const [sending, setSending] = useState(false);
-
-  // PART 2 — OBSERVE AUTHENTICATION STATE
-  // Firebase checks for a saved session asynchronously; render neither state too early.
-  useEffect(() => {
-    const unsubscribe = observeAuthState(nextUser => {
-      setUser(nextUser);
-      setAuthReady(true);
-    });
-
-    // PART 7 — CLEAN UP SUBSCRIPTIONS: stop observing auth when this screen leaves.
-    return unsubscribe;
-  }, []);
-
-  // PART 6 — REALTIME MESSAGE SUBSCRIPTION
-  // User-scoped effect means signed-out users do not subscribe to the board.
-  useEffect(() => {
-    if (!user) {
-      setMessages([]);
-      setMessagesLoading(false);
-      return undefined;
-    }
-
-    setMessagesLoading(true);
-    setMessageError('');
-    const unsubscribe = subscribeToMessages(
-      nextMessages => {
-        setMessages(nextMessages);
-        setMessagesLoading(false);
-      },
-      error => {
-        setMessageError(error.message || 'Please try again.');
-        setMessagesLoading(false);
-      },
-    );
-
-    // PART 7 — CLEAN UP SUBSCRIPTIONS: React calls this when user changes or screen leaves.
-    return unsubscribe;
-  }, [user]);
-
-  async function handleAuth(operation, email = '', password = '') {
-    setAuthBusy(true);
-    setAuthError('');
-    try {
-      await operation(email.trim(), password);
-    } catch (error) {
-      setAuthError(error.message || 'We could not sign you in. Please try again.');
-    } finally {
-      setAuthBusy(false);
-    }
-  }
-
-  async function handleSend(text) {
-    setSending(true);
-    setMessageError('');
-    try {
-      // PART 4 — CREATE A MESSAGE associated with the signed-in user.
-      await createMessage({ text, user });
-      return true;
-    } catch (error) {
-      setMessageError(error.message || 'Your message could not be sent.');
-      return false;
-    } finally {
-      setSending(false);
-    }
-  }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.eyebrow}>A SMALL FIREBASE CODE TOUR</Text>
         <Text style={styles.heading}>Firebase tour</Text>
-        <Text style={styles.intro}>A shared message board, powered by Authentication and live Firestore updates.</Text>
+        <Text style={styles.copy}>A shared message board. As you work through the parts below, this static screen will become a realtime app.</Text>
 
-        {!authReady ? (
-          <View style={styles.loading}>
-            <ActivityIndicator accessibilityLabel="Checking authentication" />
-            <Text style={styles.muted}>Checking your sign-in…</Text>
-          </View>
-        ) : user ? (
-          <View style={styles.board}>
-            <View style={styles.userRow}>
-              <View style={styles.userCopy}>
-                <Text style={styles.sectionTitle}>You’re signed in</Text>
-                <Text style={styles.muted}>{user.email}</Text>
-              </View>
-              <Pressable accessibilityRole="button" disabled={authBusy} onPress={() => handleAuth(signOutCurrentUser)} style={styles.signOut}>
-                <Text style={styles.signOutText}>{authBusy ? 'Please wait…' : 'Sign out'}</Text>
-              </Pressable>
-            </View>
-            <View style={styles.divider} />
-            <Text style={styles.sectionTitle}>Community messages</Text>
-            <MessageComposer onSend={handleSend} busy={sending} error={messageError} />
-            <MessageList error={messageError} loading={messagesLoading} messages={messages} />
-          </View>
-        ) : (
-          <AuthPanel
-            busy={authBusy}
-            error={authError}
-            onSignIn={(email, password) => handleAuth(signIn, email, password)}
-            onSignUp={(email, password) => handleAuth(signUp, email, password)}
-          />
-        )}
-        <Text style={styles.footer}>Authentication decides who can join. Firestore Rules decide what each signed-in person is allowed to do.</Text>
+        <View style={styles.panel}>
+          <Text style={styles.subheading}>Join the conversation</Text>
+          <TextInput accessibilityLabel="Email" autoCapitalize="none" placeholder="Email" style={styles.input} />
+          <TextInput accessibilityLabel="Password" placeholder="Password" secureTextEntry style={styles.input} />
+          <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Create account</Text></Pressable>
+          <Pressable accessibilityRole="button" style={styles.secondary}><Text style={styles.secondaryText}>Sign in</Text></Pressable>
+        </View>
+
+        <View style={styles.panel}>
+          <Text style={styles.subheading}>Community messages</Text>
+          <Text style={styles.copy}>Messages will appear here after the read and realtime-listener parts.</Text>
+          <TextInput accessibilityLabel="Message" placeholder="Write a message..." style={styles.input} />
+          <Pressable accessibilityRole="button" style={styles.primary}><Text style={styles.primaryText}>Send</Text></Pressable>
+        </View>
+        <Text style={styles.footer}>Authentication decides who can join. Firebase Security Rules decide what signed-in people may do.</Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// ======================================================
+// PART 2 — OBSERVE AUTHENTICATION STATE
+//
+// WHY: Firebase needs a moment to restore a saved sign-in.
+// PRODUCT QUESTION: What should returning visitors see while we wait?
+// DO: Subscribe in an effect, update user/readiness state, and clean up.
+// CODE TO COMPLETE (not a copy/paste solution):
+// ```js
+// useEffect(() => {
+//   // TODO: call the auth observer and update both pieces of state.
+//   // TODO: return the observer's cleanup function.
+// }, []);
+// ```
+// VERIFY: A signed-out visitor sees account controls; a signed-in visitor sees their email.
+// NEXT: Search for "PART 3 — AUTHENTICATION ACTIONS" in firebase/authService.js.
+// ======================================================
+
+// ======================================================
+// PART 7 — CLEAN UP REALTIME SUBSCRIPTIONS
+//
+// WHY: Leaving an old listener active can waste work and duplicate updates.
+// PRODUCT QUESTION: Should a screen keep listening after the user leaves it?
+// DO: Return each subscription's cleanup function from the effect that created it.
+// CODE TO COMPLETE:
+// ```js
+// useEffect(() => {
+//   // TODO: keep the returned unsubscribe function and return it here.
+// }, [user]);
+// ```
+// VERIFY: Unmounting the screen stops the auth and message listeners.
+// NEXT: Search for "PART 8 — SECURITY RULES" in firestore.rules.
+// ======================================================
+
 const styles = StyleSheet.create({
   safeArea: { backgroundColor: '#f4f6fb', flex: 1 },
-  content: { gap: 14, padding: 22, paddingTop: 34 },
+  content: { gap: 16, padding: 22, paddingTop: 34 },
   eyebrow: { color: '#4358d5', fontSize: 11, fontWeight: '800', letterSpacing: 1.2 },
   heading: { color: '#19233b', fontSize: 32, fontWeight: '800' },
-  intro: { color: '#5f6b83', fontSize: 16, lineHeight: 23, marginBottom: 8 },
-  loading: { alignItems: 'center', flexDirection: 'row', gap: 10, minHeight: 100 },
-  muted: { color: '#5f6b83', fontSize: 14 },
-  board: { gap: 14 },
-  userRow: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
-  userCopy: { gap: 4 },
-  sectionTitle: { color: '#19233b', fontSize: 18, fontWeight: '700' },
-  signOut: { borderColor: '#dce2ee', borderRadius: 9, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 9 },
-  signOutText: { color: '#3448c0', fontWeight: '600' },
-  divider: { backgroundColor: '#dce2ee', height: 1, marginVertical: 3 },
-  footer: { color: '#778198', fontSize: 12, lineHeight: 18, marginTop: 18 },
+  copy: { color: '#5f6b83', fontSize: 15, lineHeight: 22 },
+  panel: { backgroundColor: '#fff', borderRadius: 12, gap: 12, padding: 16 },
+  subheading: { color: '#19233b', fontSize: 18, fontWeight: '700' },
+  input: { backgroundColor: '#fff', borderColor: '#dce2ee', borderRadius: 9, borderWidth: 1, padding: 13 },
+  primary: { alignItems: 'center', backgroundColor: '#4358d5', borderRadius: 9, padding: 13 },
+  primaryText: { color: '#fff', fontWeight: '700' },
+  secondary: { alignItems: 'center', borderColor: '#4358d5', borderRadius: 9, borderWidth: 1, padding: 13 },
+  secondaryText: { color: '#3448c0', fontWeight: '700' },
+  footer: { color: '#778198', fontSize: 12, lineHeight: 18 },
 });

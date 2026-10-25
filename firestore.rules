@@ -1,9 +1,11 @@
 // PART 8 — SECURITY RULES
-// Hiding a button is a UI restriction, not authorization. Firebase evaluates
-// these intentionally minimal rules; client config is not the security boundary.
+// WHY: Hiding a button is a UI restriction, not authorization. Firebase
+// evaluates these intentionally minimal rules; client config is not the boundary.
 // PRODUCT QUESTION: Which actions should a participant be allowed to take?
+// DO: Read the active rules below and trace who can read, create, or delete.
+// CODE TO REVIEW: The rules block below is the policy Firebase will evaluate.
 // VERIFY: Publish the rules, then compare a signed-in request with a signed-out one.
-// NEXT: After this terminal tour part, discuss which product actions need rules.
+// NEXT: Search for "Security conversation" in README.md.
 rules_version = '2';
 
 service cloud.firestore {

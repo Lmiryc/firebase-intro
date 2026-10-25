@@ -15,10 +15,6 @@ GitHub Actions does not require Firebase secrets. On `main`, it reports lesson p
 
 Automated tests do not connect to Firebase, need no live Firebase project, and never write to the class project. Optional future emulator tests can add rules-focused integration coverage without changing the fast unit-test workflow.
 
-### Session design
-
-The tour is designed for a three-hour course with no more than one hour of structured instruction. The implementation favors visible, local code and product/design discussion over engineering depth. Students can explore one screen and two small Firebase service files at a time.
-
 ## Student setup
 
 ```sh
@@ -31,7 +27,7 @@ npm start
 
 In Firebase Console, create or select a project, enable **Authentication → Sign-in method → Email/Password**, and create a **Cloud Firestore** database. In the project settings, register a Web app and copy its web configuration values into `.env`. Start with `firestore.rules` and publish the rules to the project before trying authenticated reads and writes.
 
-Students copy `.env.example` to `.env` and paste their Firebase **web** configuration into `.env`. Expo substitutes `EXPO_PUBLIC_*` values into the client application. The local `.env` workflow helps avoid accidental repository commits; it does **not** make these client configuration values secret. The security boundary is Firebase Authentication together with Firebase Security Rules. Never put Admin SDK credentials, service-account JSON, or private keys in these variables. This course does not use a backend configuration proxy.
+Copy `.env.example` to `.env` and paste their Firebase **web** configuration into `.env`. Expo substitutes `EXPO_PUBLIC_*` values into the client application. The local `.env` workflow helps avoid accidental repository commits; it does **not** make these client configuration values secret. The security boundary is Firebase Authentication together with Firebase Security Rules. Never put Admin SDK credentials, service-account JSON, or private keys in these variables. This course does not use a backend configuration proxy.
 
 ## The tour
 

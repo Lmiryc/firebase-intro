@@ -8,11 +8,16 @@
     "splash": {
       "backgroundColor": "#f4f6fb"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {},
-    "web": {}
+    "web": {},
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

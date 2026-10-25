@@ -16,6 +16,8 @@ jest.mock('../firebase/messageService', () => ({
   subscribeToMessages: jest.fn(),
 }));
 
+jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);
+
 const signedInUser = { uid: 'user-42', email: 'student@example.com' };
 let authListener;
 let messageListener;

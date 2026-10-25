@@ -1,6 +1,6 @@
 # Firebase Tour: a realtime message board
 
-A small Expo + React Native application for learning the Firebase ideas that matter when collaborating on prototypes: Authentication, Firestore documents, and realtime updates. The app has one screen and uses React state and effects—no Redux, navigation framework, backend proxy, or production architecture detour.
+A small Expo + React Native application for learning the Firebase ideas that matter when collaborating on prototypes: Authentication, Firestore documents, and realtime updates. The app has one screen and uses React state and effects-no Redux, navigation framework, backend proxy, or production architecture detour.
 
 ## Instructor guide
 
@@ -31,7 +31,7 @@ Copy `.env.example` to `.env` and paste their Firebase **web** configuration int
 
 ## The tour
 
-Complete **Parts 1–8 in order**. Search the repository for `PART 1`, `PART 2`, and so on; each heading includes why the code matters, a task, a verification, and the next destination. At the end of each part, run:
+Complete **Parts 1–8 in order**. Search the repository for `PART 1`, `PART 2`, and so on. Most parts say exactly which import, return statement, or effect block to uncomment; you should not need to invent Firebase code. For a `/* ... */` block, remove the two comment markers as directed. Each part includes why the code matters, a product question, a verification, and the next destination. At the end of each part, run:
 
 ```sh
 npm run check-progress
@@ -47,7 +47,7 @@ The progress checker parses active JavaScript with Babel rather than counting le
 5. Demonstrate a one-time read and preserve each document's Firestore ID.
 6. Replace the app's startup read with a realtime subscription.
 7. Clean up both Auth and Firestore subscriptions when effects end.
-8. Read the minimal Firestore Security Rules and discuss what the UI can—and cannot—protect.
+8. Read the minimal Firestore Security Rules and discuss what the UI can-and cannot-protect.
 
 The message document is intentionally flat: `text`, `authorId`, `authorEmail`, and `createdAt`. Firestore's document ID is included as `id` when data is mapped to the UI, and the query orders by newest first.
 

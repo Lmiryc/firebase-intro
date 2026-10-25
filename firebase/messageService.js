@@ -1,62 +1,93 @@
+// PARTS 4–6 - Uncomment this import block as you reach each part.
+// import {
+//   addDoc,
+//   collection,
+//   getDocs,
+//   onSnapshot,
+//   orderBy,
+//   query,
+//   serverTimestamp,
+// } from 'firebase/firestore';
+// import { db } from './config';
+
 // ======================================================
-// PART 4 — CREATE A MESSAGE
+// PART 4 - CREATE A MESSAGE
 //
-// WHY: A Firestore document stores both the text and who sent it.
-// PRODUCT QUESTION: Which author details help people trust a shared message?
-// DO: Write to the top-level "messages" collection. Trim/reject blank text and
-//     include the signed-in user's uid/email plus a server-generated time.
-// CODE TO COMPLETE:
-// ```js
-// export async function createMessage({ text, user }) {
-//   // TODO: build the document data and call Firestore's add-document operation.
-// }
-// ```
-// VERIFY: Send one message and inspect its fields in Firebase Console.
-// NEXT: Search for "PART 5 — READ MESSAGES ONCE" below.
+// WHY: A Firestore document stores the text and who sent it.
+// PRODUCT QUESTION: Which author details help people trust a message?
+// DO: Uncomment the import block above and the addDoc block below.
+//     The trim and empty-message checks are already active.
+// VERIFY: Send a message and inspect its fields in Firebase Console.
+// NEXT: Search for "PART 5 - READ MESSAGES ONCE" below.
 // ======================================================
 export async function createMessage({ text, user }) {
-  // TODO PART 4: implement an authenticated Firestore create operation.
+  const trimmedText = text.trim();
+  if (!trimmedText) {
+    throw new Error('Write a message before sending.');
+  }
+  if (!user) {
+    throw new Error('Sign in before sending a message.');
+  }
+
+  // Uncomment this block to create the Firestore document:
+  // return addDoc(collection(db, 'messages'), {
+  //   text: trimmedText,
+  //   authorId: user.uid,
+  //   authorEmail: user.email,
+  //   createdAt: serverTimestamp(),
+  // });
   throw new Error('PART 4 is not complete: create a message.');
 }
 
 // ======================================================
-// PART 5 — READ MESSAGES ONCE
+// PART 5 - READ MESSAGES ONCE
 //
-// WHY: A one-time read is a useful photograph of the collection.
-// PRODUCT QUESTION: Is a refresh button enough for a live conversation?
-// DO: Query newest-first and map document IDs alongside document data.
-// CODE TO COMPLETE:
-// ```js
-// export async function loadMessagesOnce() {
-//   // TODO: use getDocs with query/orderBy; preserve each document's ID.
-// }
-// ```
-// VERIFY: Existing messages appear after loading the board.
-// NEXT: Search for "PART 6 — REALTIME MESSAGE SUBSCRIPTION" below.
+// WHY: getDocs() gives us a photograph of the collection.
+// PRODUCT QUESTION: Is a refresh enough for a live conversation?
+// DO: Uncomment the block below. Keep this demonstration after Part 6.
+// VERIFY: Existing messages appear when the signed-in board loads.
+// NEXT: Search for "PART 6 - REALTIME MESSAGE SUBSCRIPTION" below.
 // ======================================================
 export async function loadMessagesOnce() {
-  // TODO PART 5: demonstrate a one-time ordered collection read.
+  // Uncomment this block for the one-time read:
+  // const messagesQuery = query(
+  //   collection(db, 'messages'),
+  //   orderBy('createdAt', 'desc'),
+  // );
+  // const snapshot = await getDocs(messagesQuery);
+  // return snapshot.docs.map(documentSnapshot => ({
+  //   id: documentSnapshot.id,
+  //   ...documentSnapshot.data(),
+  // }));
   throw new Error('PART 5 is not complete: read messages once.');
 }
 
 // ======================================================
-// PART 6 — REALTIME MESSAGE SUBSCRIPTION
+// PART 6 - REALTIME MESSAGE SUBSCRIPTION
 //
-// WHY: A subscription keeps the list current without a refresh.
-// PRODUCT QUESTION: How much faster should a collaborative prototype feel?
-// DO: Subscribe to an ordered query, map document IDs, update the list, and
-//     surface listener errors. The screen will own the returned cleanup.
-//     Let a message FlatList own vertical scrolling; don't nest it in a ScrollView.
-// CODE TO COMPLETE:
-// ```js
-// export function subscribeToMessages(onMessages, onError) {
-//   // TODO: return the Firestore realtime listener's unsubscribe function.
-// }
-// ```
-// VERIFY: Two signed-in clients should see a new message without refreshing.
-// NEXT: Search for "PART 7 — CLEAN UP REALTIME SUBSCRIPTIONS" in App.js.
+// WHY: onSnapshot() keeps the list current without refreshing.
+// PRODUCT QUESTION: How quickly should a new message appear for others?
+// DO: Uncomment the listener block below. It reports both data and errors.
+//     Let the screen's FlatList own vertical scrolling; don't nest it in a ScrollView.
+// VERIFY: Two signed-in clients see a new message without refreshing.
+// NEXT: Search for "PART 7 - CLEAN UP THE SUBSCRIPTION" in App.js.
 // ======================================================
 export function subscribeToMessages(onMessages, onError) {
-  // TODO PART 6: subscribe to the messages query and pass data/errors to callers.
+  // Uncomment this block to subscribe to live changes:
+  // const messagesQuery = query(
+  //   collection(db, 'messages'),
+  //   orderBy('createdAt', 'desc'),
+  // );
+  // return onSnapshot(
+  //   messagesQuery,
+  //   snapshot => {
+  //     const nextMessages = snapshot.docs.map(documentSnapshot => ({
+  //       id: documentSnapshot.id,
+  //       ...documentSnapshot.data(),
+  //     }));
+  //     onMessages(nextMessages);
+  //   },
+  //   onError,
+  // );
   throw new Error('PART 6 is not complete: subscribe to message updates.');
 }
